@@ -1,7 +1,9 @@
 Docker image pull
+
 $ docker pull httpd
 
 ara-fe-server container run
+
 $ docker run -d -it^
 --ara-fe-server^
 my-apache-app^
