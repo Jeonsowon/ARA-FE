@@ -1,0 +1,156 @@
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f4f4;
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100%;
+  max-height: 100%;
+  background-color: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.main-content {
+  display: flex;
+  flex-grow: 1;
+  height: 100%;
+}
+
+.file-box {
+  width: 20%;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-right: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.file-box h3{
+  margin: 0;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.file-box input[type="file"] {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.file-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.file-box ul li {
+  padding: 5px;
+  margin-bottom: 5px;
+  background-color: #e9e9eb;
+  border-radius: 5px;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-header {
+  background-color: #868fe4;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  flex-shrink: 0;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.chat-messages {
+  flex-grow: 1;
+  padding: 10px;
+  overflow-y: auto;
+  border-bottom: 1px solid #ccc;
+  background-color: #f9f9f9;
+}
+
+.message {
+  padding: 15px;
+  margin-bottom: 10px;
+  background-color: #e9e9eb;
+  border-radius: 10px;
+  width: fit-content;
+  word-wrap: break-word;
+  max-width: 35%;
+  position: relative;
+  /*display: inline-block;*/
+}
+
+.message.self {
+  background-color: #c4c8e975;
+  margin-left: auto;
+  font-size : 16px;
+}
+
+.message::after {
+  content: '';
+  position: absolute;
+  border-style: solid;
+  border-width: 10px 0 0 10px;
+  border-color: #e9e9eb transparent transparent transparent; /* 말풍선 꼬리 색상 */
+  top: 100%;
+  left: 10px; /* 말풍선 꼬리 위치 */
+}
+
+
+.message.self::after {
+  border-color: #dcf8c6 transparent transparent transparent; /* 본인 메시지 색상 */
+  left: auto;
+  right: 5px; /* 말풍선 꼬리를 오른쪽으로 */
+}
+
+.chat-input {
+  display: flex;
+  padding: 17px;
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+  flex-shrink: 0;
+}
+
+.chat-input textarea {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  resize: none;
+  overflow: hidden;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+.chat-input button {
+  background-color: #868fe4;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.chat-input button:hover {
+  background-color: #757cbd;
+}
+
