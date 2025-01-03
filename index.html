@@ -4,14 +4,61 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ARA</title>
+
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css">
-  <link rel="stylesheet" href="./css/main.css">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="stylesheet" href="./css/main.css">
+
+  <script src="./js/main.js"></script>
 </head>
 <body>
-  <div class="chat-container">
+  <div class="main-container">
+    <div class="side-container">
+      <div class="menu-header">
+
+      </div>
+    </div>
+    <div class="chat-container">
+      <div class="chat-header">
+        <img src="./images/ARA-logo.png" alt="ARA" class="header-logo">
+
+        <div class="btn-group">
+          <a href="javascript:void(0)" class="external_upload">
+            <div class="material-icons">upload</div>
+          </a>
+          <a href="javascript:void(0)" class="user">
+            <div class="material-icons">person</div>
+          </a>
+        </div>
+      </div>
+
+      <section class="chat-content">
+        <div class="chat-description">
+          <h1 class="chat-description-text">성공적인 학습을 위한 최고의 서포터 'ARA'</h1>
+        </div>
+
+        <div class="chat-input">
+          <textarea id="message-input" placeholder="Type a message." rows="1"></textarea>
+          <a href="javascript:void(0)" class="send-button">
+            <div class="material-icons">send</div>
+          </a>
+        </div>
+
+        <div class="chat-actions">
+          <button>학습내용 요약</button>
+          <button>질문내용 요약</button>
+          <button>퀴즈 생성</button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+
+<!--  <div class="chat-container">
     <div class="chat-header">
       <h2>Chat Room</h2>
     </div>
@@ -31,6 +78,8 @@
       </div>
     </div>
   </div>
-  <script src="./js/main.js"></script>
+
+  -->
+
 </body>
 </html>
