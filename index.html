@@ -13,17 +13,22 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
   <link rel="stylesheet" href="./css/main.css">
 
-  <script src="./js/main.js"></script>
+  <script defer src="./js/main.js"></script>
 </head>
 <body>
   <div class="main-container">
-    <div class="side-container">
-      <div class="menu-header">
 
+    <!-- 왼쪽 사이드바 -->
+    <section class="side-container">
+      <div class="menu-header">
+        <!-- 사이드 메뉴, 위젯 등 -->
       </div>
-    </div>
+    </section>
+
+    <!-- 오른쪽 메인 영역 -->
     <div class="chat-container">
-      <div class="chat-header">
+      <!-- 상단 헤더 -->
+      <header class="chat-header">
         <img src="./images/ARA-logo.png" alt="ARA" class="header-logo">
 
         <div class="btn-group">
@@ -34,25 +39,29 @@
             <div class="material-icons">person</div>
           </a>
         </div>
-      </div>
+      </header>
 
+      <!-- 가운데 내용 (안내문구, 입력창, 버튼 등) -->
       <section class="chat-content">
+        <!-- 안내 문구 -->
         <div class="chat-description">
           <h1 class="chat-description-text">성공적인 학습을 위한 최고의 서포터 'ARA'</h1>
         </div>
 
+        <!-- 메시지 입력 영역 -->
         <div class="chat-input">
           <textarea id="message-input" placeholder="Type a message." rows="1"></textarea>
-          <a href="javascript:void(0)" class="send-button">
+          <button class="send-button" id="sendButton" disabled>
             <div class="material-icons">send</div>
-          </a>
+          </button>
         </div>
-
+        <!-- 액션 버튼들 -->
         <div class="chat-actions">
           <button>학습내용 요약</button>
           <button>질문내용 요약</button>
           <button>퀴즈 생성</button>
         </div>
+
       </section>
     </div>
   </div>
