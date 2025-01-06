@@ -61,9 +61,26 @@
           <button>질문내용 요약</button>
           <button>퀴즈 생성</button>
         </div>
-
+      
       </section>
     </div>
+
+    <!-- 로그인 팝업 -->
+    <div id="login-popup" class="popup hidden">
+      <div class="popup-content">
+        <h2>로그인</h2>
+        <form id="login-form">
+          <label for="username">아이디:</label>
+          <input type="text" id="username" name="username" required>
+          <label for="password">비밀번호:</label>
+          <input type="text" id="password" name="password" required>
+
+          <button type="submit" class="login-button">로그인</button>
+          <button type="button" class="close-button">닫기</button>
+        </form>
+      </div>
+    </div>
+
   </div>
 
 
