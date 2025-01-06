@@ -77,7 +77,28 @@
     chatInput.classList.add('down');
   }
 
+const userButton = document.querySelector('.user');
+const loginPopup = document.getElementById('login-popup');
+const closeButton = document.querySelector('.close-button');
+const loginButton = document.querySelector('.login-button')
+const loginInput = document.querySelector('.login-form input#username')
 
+// 팝업 열기
+userButton.addEventListener('click', function () {
+  loginPopup.classList.remove('hidden');
+});
+
+// 팝업 닫기
+closeButton.addEventListener('click', function () {
+  loginPopup.classList.add('hidden');
+});
+
+// 팝업 바깥 클릭 시 닫기
+loginPopup.addEventListener('click', function (event) {
+  if (event.target === loginPopup) {
+    loginPopup.classList.add('hidden');
+  }
+});
 
 /*
 // script.js
