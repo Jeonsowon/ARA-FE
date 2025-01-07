@@ -20,15 +20,77 @@
 
     <!-- 왼쪽 사이드바 -->
     <section class="side-container">
-      <div class="menu-header">
-        <!-- 사이드 메뉴, 위젯 등 -->
-      </div>
+      <div class="side-header"></div>
+      <!-- 사이드 메뉴, 위젯 등 -->
+      <section class="study-chats">
+        <div class="menu-header">
+          <div class="material-icons">list</div>
+          <h2>Study Chats</h2>
+          <button class="add-chat-button">
+            <div class="material-icons">create_new_folder</div>
+          </button>
+          <button class="toggle-section-button">
+            <div class="material-icons">expand_more</div>
+          </button>
+        </div>
+        <!-- Study Chats 리스트 -->
+        <div class="chats-list collapsible">
+          <ul>
+            <li>Chat 1
+              <button class="chat-more-button">
+                <div class="material-icons">more_horiz</div>
+              </button>
+            </li>
+          </ul>
+
+          <!-- Popup Modal -->
+          <div id="action-popup" class="popup hidden">
+            <div class="popup-content">
+              <label for="chat-name">New Chat Name:</label>
+              <input type="text" id="chat-name" placeholder="Enter new name" />
+              <button id="save-rename">이름 변경하기</button>
+              <button id="delete-chat">채팅방 삭제하기</button>
+              <button id="close-popup">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="custom-widgets">
+        <div class="menu-header">
+          <h2>커스텀 위젯</h2>
+          <button class="toggle-section-button">
+            <div class="material-icons">expand_more</div>
+          </button>
+        </div>
+        <!-- 위젯 리스트 -->
+        <div class="widgets-list collapsible"></div>
+        <button class="widget add-btn">+ 위젯추가하기</button>
+      </section>
+
+      <section class="library">
+        <div class="menu-header">
+          <div class="material-icons">folder</div>
+          <h2>Library</h2>
+          <button class="toggle-section-button">
+            <div class="material-icons">expand_more</div>
+          </button>
+        </div>
+        <!-- 라이브러리 리스트 -->
+        <div class="file-list collapsible"></div>
+        <button class="file add-btn" id="add-file-button">+ 파일추가하기</button>
+        <input type="file" id="file-input" multiple hidden>
+      </section>
+
     </section>
 
     <!-- 오른쪽 메인 영역 -->
     <div class="chat-container">
       <!-- 상단 헤더 -->
       <header class="chat-header">
+        <button id="toggle-sidebar" class="toggle-button">
+          <div class="material-icons">menu_open</div>
+        </button>
         <img src="./images/ARA-logo.png" alt="ARA" class="header-logo">
 
         <div class="btn-group">
@@ -73,39 +135,14 @@
           <label for="username">아이디:</label>
           <input type="text" id="username" name="username" required>
           <label for="password">비밀번호:</label>
-          <input type="text" id="password" name="password" required>
+          <input type="password" id="password" name="password" required>
 
-          <button type="submit" class="login-button">로그인</button>
-          <button type="button" class="close-button">닫기</button>
+          <button type="submit" class="login-button" aria-label="로그인">로그인</button>
+          <button type="button" class="close-button">X</button>
         </form>
       </div>
     </div>
-
   </div>
-
-
-<!--  <div class="chat-container">
-    <div class="chat-header">
-      <h2>Chat Room</h2>
-    </div>
-    <div class="main-content">
-      <div class="file-box">
-        <h3>Files</h3>
-        <input type="file" id="file-input" multiple>
-        <ul id="file-list"></ul>
-      </div>
-    
-      <div class="chat-content">
-        <div class="chat-messages" id="chat-messages"></div>
-        <div class="chat-input">
-          <textarea id="message-input" placeholder="Type a message." rows="1"></textarea>
-          <button id="send-button">Send</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  -->
 
 </body>
 </html>
