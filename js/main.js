@@ -100,62 +100,151 @@ loginPopup.addEventListener('click', function (event) {
   }
 });
 
-/*
-// script.js
-document.getElementById('send-button').addEventListener('click', sendMessage);
-document.getElementById('message-input').addEventListener('keypress', function (e) {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    sendMessage();
+// 사이드바 토글 처리
+const sideContainer = document.querySelector('.side-container');
+const toggleButton = document.getElementById('toggle-sidebar');
+const chatHeader = document.querySelector('.chat-header');
+
+// 사이드바 초기 설정
+if (localStorage.getItem('sidebarCollapsed') === 'true') {
+  sideContainer.classList.add('collapsed');
+  chatHeader.classList.add('collapsed');
+}
+
+// 사이드바 상태 저장하여 새로고침 후에도 유지
+toggleButton.addEventListener('click', function () {
+  const isCollapsed = sideContainer.classList.toggle('collapsed');
+  chatHeader.classList.toggle('collapsed');
+  localStorage.setItem('sidebarCollapsed', isCollapsed);
+});
+
+// 사이드바 list 토글 처리
+document.querySelectorAll('.toggle-section-button').forEach((button) => {
+  button.addEventListener('click', function (e) {
+    const menuHeader = e.target.closest('.menu-header');
+    const collapsible = menuHeader.nextElementSibling;
+
+    // 토글 상태 변경
+    if (collapsible.classList.contains('expanded')) {
+      collapsible.classList.remove('expanded');
+      button.querySelector('.material-icons').textContent = 'expand_more';
+    } else {
+      collapsible.classList.add('expanded');
+      button.querySelector('.material-icons').textContent = 'expand_less';
+    }
+  });
+});
+
+// 파일 추가
+const fileInput = document.getElementById('file-input');
+const addFileButton = document.getElementById('add-file-button');
+const fileList = document.querySelector('.file-list');
+
+// 파일 추가 버튼 클릭 시 파일 선택창 열기
+addFileButton.addEventListener('click', () => {
+  fileInput.click();
+});
+
+// 파일 선택 후 리스트에 추가
+fileInput.addEventListener('change', () => {
+  const files = Array.from(fileInput.files);
+
+  files.forEach((file) => {
+    // 중복 파일 처리
+    const isDuplicate = Array.from(fileList.children).some(
+      (child) => child.firstChild.textContent === file.name
+    );
+    if (!isDuplicate) {
+      const fileItem = document.createElement('div');
+      fileItem.classList.add('file-item');
+
+      // 파일 이름 표시
+      const fileName = document.createElement('span');
+      fileName.textContent = file.name;
+
+      // 삭제 버튼
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = 'X';
+      deleteButton.addEventListener('click', () => fileItem.remove());
+
+      // 리스트에 추가
+      fileItem.appendChild(fileName);
+      fileItem.appendChild(deleteButton);
+      fileList.appendChild(fileItem);
+    }
+  });
+  // 파일 입력창 초기화
+  fileInput.value = '';
+});
+
+// 새로운 채팅 추가
+const addChatButton = document.querySelector('.add-chat-button');
+const chatsListUl = document.querySelector('.chats-list ul');
+
+let chatCount = 1; // 기본 값 설정
+
+addChatButton.addEventListener('click', function () {
+  chatCount++; // 새로운 채팅 번호 증가
+
+  const newChat = document.createElement('li');
+  newChat.textContent = `Chat ${chatCount}`;
+
+  // chat-more-button 추가
+  const moreButton = document.createElement('button');
+  moreButton.classList.add('chat-more-button');
+  moreButton.innerHTML = '<div class="material-icons">more_horiz</div>';
+
+  // li에 button 추가
+  newChat.appendChild(moreButton);
+
+  // chats-list ul에 li 추가
+  chatsListUl.appendChild(newChat);
+});
+
+const chatsList = document.querySelector('.chats-list');
+const popup = document.getElementById('action-popup');
+const deleteButton = document.getElementById('delete-chat');
+const closePopupButton = document.getElementById('close-popup');
+const renameInput = document.getElementById('chat-name');
+const saveRenameButton = document.getElementById('save-rename');
+
+let selectedChat = null;
+
+// Add event listener to action buttons
+chatsList.addEventListener('click', (e) => {
+  if (e.target.closest('.chat-more-button')) {
+    selectedChat = e.target.closest('li');
+    openPopup();
   }
 });
 
-// textarea 자동 크기 조정
-const textarea = document.getElementById('message-input');
-textarea.addEventListener('input', autoResize);
-
-function autoResize() {
-  this.style.height = 'auto'; // 높이를 초기화해 텍스트 길이에 맞게 조정
-  this.style.height = this.scrollHeight + 'px'; // 텍스트 길이에 맞게 높이를 재설정
+// Open popup
+function openPopup() {
+  popup.classList.remove('hidden');
 }
 
-function sendMessage() {
-  const messageInput = document.getElementById('message-input');
-  const message = messageInput.value.trim();
-  
-  if (message === '') return;
-
-  const chatMessages = document.getElementById('chat-messages');
-
-  // Create a new message div
-  const messageDiv = document.createElement('div');
-  messageDiv.classList.add('message', 'self');
-  messageDiv.innerText = message;
-
-  // Append the new message to chat
-  chatMessages.appendChild(messageDiv);
-
-  // Scroll to the bottom of the chat
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-
-  // Clear the input field and reset height
-  messageInput.value = '';
-  messageInput.style.height = 'auto'; // 입력창 크기 초기화
+// Close popup
+function closePopup() {
+  popup.classList.add('hidden');
+  selectedChat = null;
 }
 
-const fileInput = document.getElementById('file-input');
-const fileList = document.getElementById('file-list');
+closePopupButton.addEventListener('click', closePopup);
 
-// 파일 선택 시 자동으로 목록에 추가
-fileInput.addEventListener('change', () => {
-  const files = Array.from(fileInput.files); // 선택된 파일 배열
-
-  files.forEach((file) => {
-    const listItem = document.createElement('li');
-    listItem.textContent = file.name; // 파일 이름 추가
-    fileList.appendChild(listItem); // 목록에 추가
-  });
-
-  fileInput.value = ''; // 파일 입력 초기화 (같은 파일을 다시 선택할 수 있도록)
+// Rename chat
+saveRenameButton.addEventListener('click', () => {
+  const newName = renameInput.value.trim();
+  if (newName && selectedChat) {
+    selectedChat.firstChild.textContent = newName + ' ';
+    renameInput.value = '';
+    closePopup();
+  }
 });
-*/
+
+// Delete chat
+deleteButton.addEventListener('click', () => {
+  if (selectedChat && confirm(`채팅방을 삭제하시겠습니까?`)) {
+    selectedChat.remove();
+    closePopup();
+  }
+});
