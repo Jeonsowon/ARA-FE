@@ -211,6 +211,12 @@ a {
   background-color: #f0f0f0;
   margin-right: 200px;
 }
+.bot-message {
+  background-color: transparent;
+  color: #000;
+  align-self: flex-start; /* 왼쪽 정렬 */
+  margin-left: 180px;
+}
 
 /* LOGIN-POPUP */
 .popup {
@@ -443,11 +449,11 @@ a {
   padding: 2px;
 }
 .chat-more-button .material-icons {
-  color: #f9f9f9;
+  color: #cccccc;
   transition: .2s;
 }
 .chat-more-button .material-icons:hover {
-  color: #000;
+  color: #333;
 }
 .popup {
   position: fixed;

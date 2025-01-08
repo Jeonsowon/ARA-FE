@@ -1,81 +1,126 @@
-  const messageInput = document.getElementById('message-input');
-  const sendButton = document.querySelector('.send-button');
-  const chatDescription = document.querySelector('.chat-description');
-  const chatContent = document.querySelector('.chat-content');
-  const chatInput = document.querySelector('.chat-input');
-  const chatAction = document.querySelector('.chat-actions');
+const messageInput = document.getElementById('message-input');
+const sendButton = document.querySelector('.send-button');
+const chatDescription = document.querySelector('.chat-description');
+const chatContent = document.querySelector('.chat-content');
+const chatInput = document.querySelector('.chat-input');
+const chatAction = document.querySelector('.chat-actions');
 
-  // 입력창 내용따라 send 버튼 활성화
-  messageInput.addEventListener('input', updateSendButtonState);
+// 입력창 내용따라 send 버튼 활성화
+messageInput.addEventListener('input', updateSendButtonState);
 
-  // 초기 상태도 검사 (새로고침하면 내용이 비어있으므로 disabled)
+// 초기 상태도 검사 (새로고침하면 내용이 비어있으므로 disabled)
+updateSendButtonState();
+
+function updateSendButtonState() {
+  // 입력값이 비어있는지 확인
+  const userMessage = messageInput.value.trim();
+  if (userMessage.length === 0) {
+    // 비어있으면 버튼 비활성화
+    sendButton.disabled = true;
+  } else {
+    // 내용 있으면 버튼 활성화
+    sendButton.disabled = false;
+  }
+}
+
+// 메세지 전송 event 
+sendButton.addEventListener('click', sendMessage);
+messageInput.addEventListener('keypress', function (e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+
+const textarea = messageInput;
+textarea.addEventListener('input', autoResize);
+
+function autoResize() {
+  this.style.height = 'auto'; // 높이를 초기화해 텍스트 길이에 맞게 조정
+  this.style.height = this.scrollHeight + 'px'; // 텍스트 길이에 맞게 높이를 재설정
+}
+
+// 메세지 전송
+function sendMessage() {
+  const userMessage = messageInput.value.trim();
+
+  chatDescription.classList.add('hide');
+  chatAction.classList.add('hide');
+
+  let chatMessages = document.getElementById('chatMessages');
+  if (!chatMessages) {
+    chatMessages = document.createElement('div');
+    chatMessages.id = 'chatMessages';
+    chatMessages.classList.add('chat-messages');
+    chatContent.appendChild(chatMessages);
+  }
+
+  // 입력 값이 비어 있으면 종료
+  if (!userMessage) return;
+
+  // 사용자 메시지 요소 생성
+  const messageDiv = document.createElement('div');
+  messageDiv.classList.add('message', 'user-message');
+  messageDiv.textContent = userMessage;
+  chatMessages.appendChild(messageDiv);
+
+  // 입력창 비우고 높이 초기화
+  messageInput.value = '';
   updateSendButtonState();
+  messageInput.style.height = 'auto';
 
-  function updateSendButtonState() {
-    // 입력값이 비어있는지 확인
-    const userMessage = messageInput.value.trim();
-    if (userMessage.length === 0) {
-      // 비어있으면 버튼 비활성화
-      sendButton.disabled = true;
-    } else {
-      // 내용 있으면 버튼 활성화
-      sendButton.disabled = false;
-    }
-  }
+  // 스크롤을 최신 메시지로
+  chatMessages.scrollTop = chatMessages.scrollHeight;
 
-  // 메세지 전송 event 
-  sendButton.addEventListener('click', sendMessage);
-  messageInput.addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      sendMessage();
-    }
-  });
+  // chat-input 아래로 이동
+  chatInput.classList.add('down');
 
-  const textarea = messageInput;
-  textarea.addEventListener('input', autoResize);
-
-  function autoResize() {
-    this.style.height = 'auto'; // 높이를 초기화해 텍스트 길이에 맞게 조정
-    this.style.height = this.scrollHeight + 'px'; // 텍스트 길이에 맞게 높이를 재설정
-  }
-
-  function sendMessage() {
-    const userMessage = messageInput.value.trim();
-
-    chatDescription.classList.add('hide');
-    chatAction.classList.add('hide');
-
-    let chatMessages = document.getElementById('chatMessages');
-    if (!chatMessages) {
-      chatMessages = document.createElement('div');
-      chatMessages.id = 'chatMessages';
-      chatMessages.classList.add('chat-messages');
-      chatContent.appendChild(chatMessages);
-    }
-
-    // 입력 값이 비어 있으면 종료
-    if (!userMessage) return;
-
-    // 채팅 메시지 요소 생성
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message', 'user-message');
-    messageDiv.textContent = userMessage;
-
-    // .chat-messages에 추가
-    chatMessages.appendChild(messageDiv);
+   // 챗봇 응답 메시지 추가 (지연된 응답으로 표시)
+   setTimeout(() => {
+    const botMessage = generateBotResponse(userMessage);
+    const botMessageDiv = document.createElement('div');
+    botMessageDiv.classList.add('message', 'bot-message');
+    botMessageDiv.textContent = botMessage;
+    chatMessages.appendChild(botMessageDiv);
 
     // 스크롤을 최신 메시지로
     chatMessages.scrollTop = chatMessages.scrollHeight;
+  }, 1000); // 1초 딜레이
+}
 
-    // 입력창 비우고 높이 초기화
-    messageInput.value = '';
-    updateSendButtonState();
-    messageInput.style.height = 'auto'; // 입력창 크기 초기화
+// // LLM API 연결
+// async function fetchChatbotResponse(userMessage) {
+//   try {
+//     const response = await fetch('http://localhost:8000/process', {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//           body: JSON.stringify({ input: userMessage }),
+//     });
 
-    // chat-input 아래로 이동
-    chatInput.classList.add('down');
+//     if (response.ok) {
+//       const data = await response.json();
+//       return data.botResponse; // 서버에서 받은 봇 응답
+//     } else {
+//       console.error('Error fetching response from server:', response.statusText);
+//       return 'Sorry, I could not process your request.';
+//     }
+//   } catch (error) {
+//     console.error('Error fetching chatbot response:', error);
+//     return 'There was an error connecting to the server.';
+//   }
+// }
+
+// 챗봇 응답 생성 함수 (TEST)
+function generateBotResponse(userMessage) {
+  // 간단한 예제: 특정 키워드에 따라 응답 생성
+  if (userMessage.toLowerCase().includes('hello')) {
+    return 'Hello! How can I assist you today?';
+  } else if (userMessage.toLowerCase().includes('bye')) {
+    return 'Goodbye! Have a great day!';
+  } else {
+    return 'I am not sure how to respond to that. Can you elaborate?';
   }
+}
 
 const userButton = document.querySelector('.user');
 const loginPopup = document.getElementById('login-popup');
