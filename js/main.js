@@ -154,13 +154,18 @@ document.addEventListener("DOMContentLoaded", () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
+        credentials: "include", // 쿠키를 활성화
       });
 
       const result = await response.json();
+      console.log("Server Response:", result); // JSON 응답 확인
+      console.log("JWT Token:", result.token); // 토큰 출력 
 
       if (response.ok) {
         alert(result.message); // "Login successful"
         console.log(`Logged in as: ${result.username}`);
+        console.log("JWT Token:", result.token); // 토큰 출력
+        localStorage.setItem("token", result.token);
         loginPopup.classList.add("hidden"); // 팝업 닫기
       } else {
         alert(result.message); // "Invalid username or password"
@@ -171,7 +176,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-
 
 // 팝업 닫기
 closeButton.addEventListener('click', function () {
@@ -272,7 +276,7 @@ addChatButton.addEventListener('click', function () {
   chatCount++; // 새로운 채팅 번호 증가
 
   const newChat = document.createElement('li');
-  newChat.textContent = `Chat ${chatCount}`;
+  newChat.textContent = `과목 ${chatCount}`;
 
   // chat-more-button 추가
   const moreButton = document.createElement('button');
