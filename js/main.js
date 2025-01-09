@@ -41,7 +41,7 @@ function autoResize() {
 }
 
 // 메세지 전송
-function sendMessage() {
+async function sendMessage() {
   const userMessage = messageInput.value.trim();
 
   chatDescription.classList.add('hide');
@@ -74,41 +74,55 @@ function sendMessage() {
 
   // chat-input 아래로 이동
   chatInput.classList.add('down');
+  
+  try {
+    const token = localStorage.getItem("token");
 
-   // 챗봇 응답 메시지 추가 (지연된 응답으로 표시)
-   setTimeout(() => {
-    const botMessage = generateBotResponse(userMessage);
-    const botMessageDiv = document.createElement('div');
-    botMessageDiv.classList.add('message', 'bot-message');
-    botMessageDiv.textContent = botMessage;
-    chatMessages.appendChild(botMessageDiv);
+    // URL에서 chatroom_id 추출
+    const currentPath = window.location.pathname; // 현재 경로: /chatroom=618188db-4240-4bb9-9830-a83272731d48
+    const chatroom_id = currentPath.split("=")[1]; // '=' 이후 값 추출
+    console.log("chatroom is ", chatroom_id);
 
-    // 스크롤을 최신 메시지로
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  }, 1000); // 1초 딜레이
+    const response = await fetch("http://localhost:8008/chat/new", {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // JWT 토큰 추가
+      },
+      body: JSON.stringify({ message: userMessage, chatroom_id}),
+    });
+
+    const result = await response.json();
+    console.log("Chat Response:", result);
+
+    if (response.ok && result.chatroomId) {
+      // 채팅방 ID가 있으면 해당 페이지로 이동
+      // window.location.href = `http://localhost:5500/chatroom=${result.chatroomId}`;
+      // URL 변경 (새로고침 없이)
+      const chatroomId = result.chatroomId;
+      history.pushState(null, "", `/chatroom=${chatroomId}`);
+
+      // 필요한 경우 새 데이터를 가져와서 화면에 반영
+      console.log(`Navigated to chatroom: ${chatroomId}`);
+    } else {
+      console.error("Failed to get chatroom ID.");
+    }
+  } catch (error) {
+    console.error("Error sending chat message:", error);
+  }
+
+  //  // 챗봇 응답 메시지 추가 (지연된 응답으로 표시)
+  //  setTimeout(() => {
+  //   const botMessage = generateBotResponse(userMessage);
+  //   const botMessageDiv = document.createElement('div');
+  //   botMessageDiv.classList.add('message', 'bot-message');
+  //   botMessageDiv.textContent = botMessage;
+  //   chatMessages.appendChild(botMessageDiv);
+
+  //   // 스크롤을 최신 메시지로
+  //   chatMessages.scrollTop = chatMessages.scrollHeight;
+  // }, 1000); // 1초 딜레이
 }
-
-// // LLM API 연결
-// async function fetchChatbotResponse(userMessage) {
-//   try {
-//     const response = await fetch('http://localhost:8000/process', {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//           body: JSON.stringify({ input: userMessage }),
-//     });
-
-//     if (response.ok) {
-//       const data = await response.json();
-//       return data.botResponse; // 서버에서 받은 봇 응답
-//     } else {
-//       console.error('Error fetching response from server:', response.statusText);
-//       return 'Sorry, I could not process your request.';
-//     }
-//   } catch (error) {
-//     console.error('Error fetching chatbot response:', error);
-//     return 'There was an error connecting to the server.';
-//   }
-// }
 
 // 챗봇 응답 생성 함수 (TEST)
 function generateBotResponse(userMessage) {
@@ -154,13 +168,18 @@ document.addEventListener("DOMContentLoaded", () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
+        credentials: "include", // 쿠키를 활성화
       });
 
       const result = await response.json();
+      console.log("Server Response:", result); // JSON 응답 확인
+      console.log("JWT Token:", result.token); // 토큰 출력 
 
       if (response.ok) {
         alert(result.message); // "Login successful"
         console.log(`Logged in as: ${result.username}`);
+        console.log("JWT Token:", result.token); // 토큰 출력
+        localStorage.setItem("token", result.token);
         loginPopup.classList.add("hidden"); // 팝업 닫기
       } else {
         alert(result.message); // "Invalid username or password"
