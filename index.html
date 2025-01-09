@@ -132,8 +132,8 @@
       <div class="popup-content">
         <h2>로그인</h2>
         <form id="login-form">
-          <label for="username">아이디:</label>
-          <input type="text" id="username" name="username" required>
+          <label for="userid">아이디:</label>
+          <input type="text" id="userid" name="userid" required>
           <label for="password">비밀번호:</label>
           <input type="password" id="password" name="password" required>
           <button type="submit" class="login-button" aria-label="로그인">로그인</button>
@@ -142,6 +142,23 @@
         </form>
       </div>
     </div>
+
+    <div id="sign-in-popup" class="popup hidden">
+      <div class="popup-content">
+        <h2>회원가입</h2>
+        <form id="sign-in-form">
+          <label for="username">이름:</label>
+          <input type="text" id="set-username" name="username" required>
+          <label for="userid">아이디:</label>
+          <input type="text" id="set-userid" name="userid" required>
+          <label for="password">비밀번호:</label>
+          <input type="password" id="set-password" name="password" required>
+          <button type="submit" class="sign-up-button" aria-label="회원등록">회원가입</button>
+          <button type="button" class="close-button">X</button>
+        </form>
+      </div>
+    </div>
+
   </div>
 
 </body>

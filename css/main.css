@@ -260,7 +260,8 @@ a {
   box-sizing: border-box;
 }
 .login-button,
-.sign-in-button {
+.sign-in-button,
+.sign-up-button {
   background-color: #282C72;
   color: white;
   border: none;

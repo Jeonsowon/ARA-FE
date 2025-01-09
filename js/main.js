@@ -140,25 +140,25 @@ const userButton = document.querySelector('.user');
 const loginPopup = document.getElementById('login-popup');
 const closeButton = document.querySelector('.close-button');
 const loginButton = document.querySelector('.login-button')
-const loginInput = document.querySelector('.login-form input#username')
+const loginInput = document.querySelector('.login-form input#userid')
 
-// 팝업 열기
+// 로그인 팝업 열기
 userButton.addEventListener('click', function () {
   loginPopup.classList.remove('hidden');
 });
 
 document.addEventListener("DOMContentLoaded", () => {
   const loginButton = document.querySelector(".login-button");
-  const loginInput = document.querySelector("input#username");
+  const loginInput = document.querySelector("input#userid");
   const passwordInput = document.querySelector("input#password");
 
   loginButton.addEventListener("click", async (event) => {
     event.preventDefault(); // 기본 폼 제출 방지
 
-    const username = loginInput.value.trim();
+    const userid = loginInput.value.trim();
     const password = passwordInput.value.trim();
 
-    if (!username || !password) {
+    if (!userid || !password) {
       alert("아이디와 비밀번호를 입력해주세요.");
       return;
     }
@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch("http://localhost:8008/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ userid, password }),
         credentials: "include", // 쿠키를 활성화
       });
 
@@ -177,12 +177,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (response.ok) {
         alert(result.message); // "Login successful"
-        console.log(`Logged in as: ${result.username}`);
+        console.log(`Logged in as: ${result.userid}`);
         console.log("JWT Token:", result.token); // 토큰 출력
         localStorage.setItem("token", result.token);
         loginPopup.classList.add("hidden"); // 팝업 닫기
       } else {
-        alert(result.message); // "Invalid username or password"
+        alert(result.message); // "Invalid userid or password"
       }
     } catch (error) {
       console.error("Error:", error);
@@ -191,9 +191,50 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// 팝업 닫기
-closeButton.addEventListener('click', function () {
-  loginPopup.classList.add('hidden');
+document.addEventListener("DOMContentLoaded", () => {
+  const loginPopup = document.getElementById("login-popup");
+  const signInPopup = document.getElementById("sign-in-popup");
+  const signInButton = document.querySelector(".sign-in-button");
+  const closeButtons = document.querySelectorAll(".close-button");
+  const signInForm = document.getElementById("sign-in-form");
+
+  // 회원가입 버튼 클릭 시 login-popup 닫고 sign-in-popup 열기
+  signInButton.addEventListener("click", (event) => {
+    event.preventDefault(); // 기본 폼 제출 방지
+    loginPopup.classList.add("hidden"); // 로그인 팝업 숨기기
+    signInPopup.classList.remove("hidden"); // 회원가입 팝업 표시
+  });
+
+  // 닫기 버튼 클릭 시 팝업 닫기
+  closeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      loginPopup.classList.add("hidden");
+      signInPopup.classList.add("hidden");
+    });
+  });
+
+  // 회원가입 폼 제출 시 localStorage에 데이터 저장
+  signInForm.addEventListener("submit", (event) => {
+    event.preventDefault(); // 기본 폼 제출 방지
+
+    const username = document.getElementById("set-username").value.trim();
+    const userid = document.getElementById("set-userid").value.trim();
+    const password = document.getElementById("set-password").value.trim();
+
+    if (!username || !userid || !password) {
+      alert("모든 필드를 입력해주세요.");
+      return;
+    }
+
+    // 데이터 저장
+    localStorage.setItem(userid, JSON.stringify({ username, password }));
+    alert("회원가입이 완료되었습니다!");
+
+    // 회원가입 팝업 닫고 로그인 팝업 열기
+    signInPopup.classList.add("hidden");
+    loginPopup.classList.remove("hidden");
+  });
+
 });
 
 // 팝업 바깥 클릭 시 닫기
