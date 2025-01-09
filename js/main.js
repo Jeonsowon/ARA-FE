@@ -133,6 +133,46 @@ userButton.addEventListener('click', function () {
   loginPopup.classList.remove('hidden');
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  const loginButton = document.querySelector(".login-button");
+  const loginInput = document.querySelector("input#username");
+  const passwordInput = document.querySelector("input#password");
+
+  loginButton.addEventListener("click", async (event) => {
+    event.preventDefault(); // 기본 폼 제출 방지
+
+    const username = loginInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    if (!username || !password) {
+      alert("아이디와 비밀번호를 입력해주세요.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8008/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert(result.message); // "Login successful"
+        console.log(`Logged in as: ${result.username}`);
+        loginPopup.classList.add("hidden"); // 팝업 닫기
+      } else {
+        alert(result.message); // "Invalid username or password"
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("로그인 요청 중 오류가 발생했습니다.");
+    }
+  });
+});
+
+
 // 팝업 닫기
 closeButton.addEventListener('click', function () {
   loginPopup.classList.add('hidden');
