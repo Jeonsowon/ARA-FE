@@ -259,7 +259,9 @@ a {
   border-radius: 4px;
   box-sizing: border-box;
 }
-.login-button {
+.login-button,
+.sign-in-button,
+.sign-up-button {
   background-color: #282C72;
   color: white;
   border: none;
@@ -338,7 +340,7 @@ a {
 .side-container > section > div > ul > li {
   padding: 5px;
   margin-right: 10px;
-  font-size: 14px;
+  font-size: 16px;
   border-radius: 9px;
   color: #000;
   cursor: pointer;
@@ -420,6 +422,7 @@ a {
   margin: 2px auto;
   cursor: pointer;
   text-align: center;
+  
 }
 .add-btn:hover {
   background-color: #282C72cc;
@@ -478,7 +481,7 @@ a {
   text-align: left;
   min-width: 250px;
 }
-.popup-content button {
+.popup-content > button {
   width: 100%;
   margin: 5px 0;
   padding: 10px;
@@ -488,10 +491,10 @@ a {
   border-radius: 5px;
   cursor: pointer;
 }
-.popup-content button#close-popup {
+.popup-content > button#close-popup {
   background-color: #ccc;
   color: #333;
 }
-.popup-content button:hover {
+.popup-content > button:hover {
   background-color: #1f244a;
 }
