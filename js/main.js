@@ -151,10 +151,42 @@ const loginPopup = document.getElementById('login-popup');
 const closeButton = document.querySelector('.close-button');
 const loginButton = document.querySelector('.login-button')
 const loginInput = document.querySelector('.login-form input#userid')
+const userInfoPopup = document.getElementById('user-info-popup');
+const userInfoName = document.getElementById('user-info');
+const userInfoId = document.getElementById('user-info-id');
+const logoutButton = document.getElementById('logout-button');
+
+// user 정보 test용
+localStorage.setItem("userInfo", JSON.stringify({ username: "전소원", userid: "sowon"}));
 
 // 로그인 팝업 열기
 userButton.addEventListener('click', function () {
-  loginPopup.classList.remove('hidden');
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    loginPopup.classList.remove('hidden');
+  }
+
+  else {
+    // 사용자 정보 업데이트 및 팝업 표시
+    userInfoPopup.classList.remove('hidden');
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    userInfoName.textContent = `환영합니다, ${userInfo.username}님!`;
+    userInfoId.textContent = `아이디: ${userInfo.userid}`;
+  }
+});
+
+// 팝업 닫기 버튼
+userInfoPopup.querySelector('.close-button').addEventListener('click', function () {
+  userInfoPopup.classList.add('hidden');
+});
+
+// 로그아웃
+logoutButton.addEventListener('click', function () {
+  localStorage.removeItem("userInfo");
+  localStorage.removeItem("token");
+  alert("로그아웃 되었습니다.");
+  userInfoPopup.classList.add('hidden');
 });
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -163,41 +195,41 @@ document.addEventListener("DOMContentLoaded", () => {
   const passwordInput = document.querySelector("input#password");
 
   loginButton.addEventListener("click", async (event) => {
-    event.preventDefault(); // 기본 폼 제출 방지
+      event.preventDefault(); // 기본 폼 제출 방지
 
-    const userid = useridInput.value.trim();
-    const password = passwordInput.value.trim();
+      const userid = useridInput.value.trim();
+      const password = passwordInput.value.trim();
 
-    if (!userid || !password) {
-      alert("아이디와 비밀번호를 입력해주세요.");
-      return;
-    }
-
-    try {
-      const response = await fetch("http://localhost:8008/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userid, password }),
-        credentials: "include", // 쿠키를 활성화
-      });
-
-      const result = await response.json();
-      console.log("Server Response:", result); // JSON 응답 확인
-      console.log("JWT Token:", result.token); // 토큰 출력 
-
-      if (response.ok) {
-        alert(result.message); // "Login successful"
-        console.log(`Logged in as: ${result.userid}`);
-        console.log("JWT Token:", result.token); // 토큰 출력
-        localStorage.setItem("token", result.token);
-        loginPopup.classList.add("hidden"); // 팝업 닫기
-      } else {
-        alert(result.message); // "Invalid userid or password"
+      if (!userid || !password) {
+        alert("아이디와 비밀번호를 입력해주세요.");
+        return;
       }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("로그인 요청 중 오류가 발생했습니다.");
-    }
+
+      try {
+        const response = await fetch("http://localhost:8008/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userid, password }),
+          credentials: "include", // 쿠키를 활성화
+        });
+
+        const result = await response.json();
+        console.log("Server Response:", result); // JSON 응답 확인
+        console.log("JWT Token:", result.token); // 토큰 출력 
+
+        if (response.ok) {
+          alert(result.message); // "Login successful"
+          console.log(`Logged in as: ${result.userid}`);
+          console.log("JWT Token:", result.token); // 토큰 출력
+          localStorage.setItem("token", result.token);
+          loginPopup.classList.add("hidden"); // 팝업 닫기
+        } else {
+          alert(result.message); // "Invalid userid or password"
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("로그인 요청 중 오류가 발생했습니다.");
+      }
   });
 });
 
@@ -223,7 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 회원가입 폼 제출 시 localStorage에 데이터 저장
+  // 회원가입 폼 제출 시 데이터 저장
   signInForm.addEventListener("submit", async (event) => {
     event.preventDefault(); // 기본 폼 제출 방지
 
@@ -263,13 +295,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-});
-
-// 팝업 바깥 클릭 시 닫기
-loginPopup.addEventListener('click', function (event) {
-  if (event.target === loginPopup) {
-    loginPopup.classList.add('hidden');
-  }
 });
 
 // 사이드바 토글 처리
