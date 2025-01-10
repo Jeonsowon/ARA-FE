@@ -101,7 +101,7 @@ async function sendMessage() {
       // URL 변경 (새로고침 없이)
       const chatroomId = result.chatroomId;
       history.pushState(null, "", `/chatroom=${chatroomId}`);
-
+      
       // 필요한 경우 새 데이터를 가져와서 화면에 반영
       console.log(`Navigated to chatroom: ${chatroomId}`);
     } else {
