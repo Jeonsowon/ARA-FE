@@ -104,6 +104,16 @@ async function sendMessage() {
       
       // 필요한 경우 새 데이터를 가져와서 화면에 반영
       console.log(`Navigated to chatroom: ${chatroomId}`);
+
+
+      // 챗봇 응답 메시지 추가
+      const botMessageDiv = document.createElement("div");
+      botMessageDiv.classList.add("message", "bot-message");
+      botMessageDiv.textContent = result.botMessage; // 서버에서 받은 botMessage
+      chatMessages.appendChild(botMessageDiv);
+
+      // 스크롤을 최신 메시지로
+      chatMessages.scrollTop = chatMessages.scrollHeight;
     } else {
       console.error("Failed to get chatroom ID.");
     }
@@ -113,10 +123,10 @@ async function sendMessage() {
 
   //  // 챗봇 응답 메시지 추가 (지연된 응답으로 표시)
   //  setTimeout(() => {
-  //   const botMessage = generateBotResponse(userMessage);
+  //   // const botMessage = generateBotResponse(userMessage);
   //   const botMessageDiv = document.createElement('div');
   //   botMessageDiv.classList.add('message', 'bot-message');
-  //   botMessageDiv.textContent = botMessage;
+  //   botMessageDiv.textContent = result.botMessage;
   //   chatMessages.appendChild(botMessageDiv);
 
   //   // 스크롤을 최신 메시지로
@@ -125,16 +135,16 @@ async function sendMessage() {
 }
 
 // 챗봇 응답 생성 함수 (TEST)
-function generateBotResponse(userMessage) {
-  // 간단한 예제: 특정 키워드에 따라 응답 생성
-  if (userMessage.toLowerCase().includes('hello')) {
-    return 'Hello! How can I assist you today?';
-  } else if (userMessage.toLowerCase().includes('bye')) {
-    return 'Goodbye! Have a great day!';
-  } else {
-    return 'I am not sure how to respond to that. Can you elaborate?';
-  }
-}
+// function generateBotResponse(userMessage) {
+//   // 간단한 예제: 특정 키워드에 따라 응답 생성
+//   if (userMessage.toLowerCase().includes('hello')) {
+//     return 'Hello! How can I assist you today?';
+//   } else if (userMessage.toLowerCase().includes('bye')) {
+//     return 'Goodbye! Have a great day!';
+//   } else {
+//     return 'I am not sure how to respond to that. Can you elaborate?';
+//   }
+// }
 
 const userButton = document.querySelector('.user');
 const loginPopup = document.getElementById('login-popup');
@@ -149,13 +159,13 @@ userButton.addEventListener('click', function () {
 
 document.addEventListener("DOMContentLoaded", () => {
   const loginButton = document.querySelector(".login-button");
-  const loginInput = document.querySelector("input#userid");
+  const useridInput = document.querySelector("input#userid");
   const passwordInput = document.querySelector("input#password");
 
   loginButton.addEventListener("click", async (event) => {
     event.preventDefault(); // 기본 폼 제출 방지
 
-    const userid = loginInput.value.trim();
+    const userid = useridInput.value.trim();
     const password = passwordInput.value.trim();
 
     if (!userid || !password) {
@@ -214,7 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // 회원가입 폼 제출 시 localStorage에 데이터 저장
-  signInForm.addEventListener("submit", (event) => {
+  signInForm.addEventListener("submit", async (event) => {
     event.preventDefault(); // 기본 폼 제출 방지
 
     const username = document.getElementById("set-username").value.trim();
@@ -226,13 +236,31 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // 데이터 저장
-    localStorage.setItem(userid, JSON.stringify({ username, password }));
-    alert("회원가입이 완료되었습니다!");
+    
+    try {
+      const response = await fetch("http://localhost:8008/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, userid, password }),
+      });
 
-    // 회원가입 팝업 닫고 로그인 팝업 열기
-    signInPopup.classList.add("hidden");
-    loginPopup.classList.remove("hidden");
+      const result = await response.json();
+
+      if (response.ok) {
+        alert(result.message); // "회원가입이 완료되었습니다!"
+        // 회원가입 팝업 닫고 로그인 팝업 열기
+        const signInPopup = document.getElementById("sign-in-popup");
+        const loginPopup = document.getElementById("login-popup");
+
+        signInPopup.classList.add("hidden");
+        loginPopup.classList.remove("hidden");
+      } else {
+        alert(result.message); // 오류 메시지 출력
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+      alert("회원가입 요청 중 오류가 발생했습니다.");
+    }
   });
 
 });
