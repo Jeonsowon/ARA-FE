@@ -137,12 +137,13 @@
           <label for="password">비밀번호:</label>
           <input type="password" id="password" name="password" required>
           <button type="submit" class="login-button" aria-label="로그인">로그인</button>
-          <button type="submit" class="sign-in-button" aria-label="회원가입">회원가입</button>
+          <button type="button" class="sign-in-button">회원가입</button>
           <button type="button" class="close-button">X</button>
         </form>
       </div>
     </div>
 
+    <!-- 회원가입 팝업 -->
     <div id="sign-in-popup" class="popup hidden">
       <div class="popup-content">
         <h2>회원가입</h2>
@@ -156,6 +157,16 @@
           <button type="submit" class="sign-up-button" aria-label="회원등록">회원가입</button>
           <button type="button" class="close-button">X</button>
         </form>
+      </div>
+    </div>
+
+    <!-- user 정보 팝업 -->
+    <div id="user-info-popup" class="popup hidden">
+      <div class="popup-content">
+        <h2 id="user-info">환영합니다!</h2>
+        <p id="user-info-id"></p>
+        <button type="button" id="logout-button">로그아웃</button>
+        <button type="button" class="close-button">X</button>
       </div>
     </div>
 

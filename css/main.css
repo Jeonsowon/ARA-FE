@@ -269,7 +269,7 @@ a {
   border-radius: 4px;
   cursor: pointer;
 }
-.close-button {
+.popup-content .close-button {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -279,6 +279,9 @@ a {
   padding: 5px;
   cursor: pointer;
   border: none;
+}
+#user-info-popup .popup-content {
+  padding: 20px;
 }
 
 /* SIDE-CONTENT */
@@ -481,7 +484,8 @@ a {
   text-align: left;
   min-width: 250px;
 }
-.popup-content > button {
+.popup-content > #save-rename,
+.popup-content > #delete-chat {
   width: 100%;
   margin: 5px 0;
   padding: 10px;
@@ -491,10 +495,17 @@ a {
   border-radius: 5px;
   cursor: pointer;
 }
-.popup-content > button#close-popup {
+.popup-content > #close-popup {
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
   background-color: #ccc;
   color: #333;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
-.popup-content > button:hover {
+.popup-content > #save-rename:hover,
+.popup-content > #delete-chat:hover {
   background-color: #1f244a;
 }
