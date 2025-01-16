@@ -159,10 +159,10 @@ const userInfoId = document.getElementById('user-info-id');
 const logoutButton = document.getElementById('logout-button');
 
 // user 정보 test용
-localStorage.setItem("userInfo", JSON.stringify({ username: "전소원", userid: "sowon"}));
+// localStorage.setItem("userInfo", JSON.stringify({ username: "전소원", userid: "sowon"}));
 
 // 로그인 팝업 열기
-userButton.addEventListener('click', function () {
+userButton.addEventListener('click', async function () {
   const token = localStorage.getItem("token");
 
   if (!token) {
@@ -171,10 +171,36 @@ userButton.addEventListener('click', function () {
 
   else {
     // 사용자 정보 업데이트 및 팝업 표시
-    userInfoPopup.classList.remove('hidden');
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    userInfoName.textContent = `환영합니다, ${userInfo.username}님!`;
-    userInfoId.textContent = `아이디: ${userInfo.userid}`;
+    // userInfoPopup.classList.remove('hidden');
+    // const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    // userInfoName.textContent = `환영합니다, ${userInfo.username}님!`;
+    // userInfoId.textContent = `아이디: ${userInfo.userid}`;
+    try {
+      // 서버로 사용자 정보 요청
+      const response = await fetch("http://localhost:8008/auth/user-info", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const userInfo = await response.json();
+        // 사용자 정보 업데이트 및 팝업 표시
+        userInfoPopup.classList.remove("hidden");
+        userInfoName.textContent = `환영합니다, ${userInfo.username}님!`;
+        userInfoId.textContent = `아이디: ${userInfo.userid}`;
+      } else {
+        console.log("Response not OK:", response.status, response.statusText); // 디버깅 추가
+        alert("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
+        localStorage.removeItem("token");
+        loginPopup.classList.remove("hidden");
+      }
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+      alert("서버 요청 중 오류가 발생했습니다.");
+    }
   }
 });
 
@@ -184,11 +210,37 @@ userInfoPopup.querySelector('.close-button').addEventListener('click', function 
 });
 
 // 로그아웃
-logoutButton.addEventListener('click', function () {
-  localStorage.removeItem("userInfo");
-  localStorage.removeItem("token");
-  alert("로그아웃 되었습니다.");
-  userInfoPopup.classList.add('hidden');
+logoutButton.addEventListener('click', async function () {
+  const token = localStorage.getItem("token");
+  console.log('token before logout is ', token);
+
+  // localStorage.removeItem("userInfo");
+  // localStorage.removeItem("token");
+  // alert("로그아웃 되었습니다.");
+  // userInfoPopup.classList.add('hidden');
+  try {
+    const response = await fetch("http://localhost:8008/auth/logout", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`, // 쿠키 포함
+      },
+      credentials: "include",
+    });
+
+    if (response.ok) {
+      localStorage.removeItem("token");
+
+      // 2. 쿠키 삭제 (쿠키 이름에 따라 수정)
+      // document.cookie = "token=; Max-Age=0; path=/;";
+      alert("로그아웃 되었습니다.");
+      userInfoPopup.classList.add("hidden");
+    } else {
+      alert("로그아웃 처리 중 오류가 발생했습니다.");
+    }
+  } catch (error) {
+    console.error("Error during logout:", error);
+    alert("서버 요청 중 오류가 발생했습니다.");
+  }
 });
 
 document.addEventListener("DOMContentLoaded", () => {
