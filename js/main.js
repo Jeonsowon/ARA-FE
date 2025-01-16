@@ -152,8 +152,6 @@ async function sendMessage() {
 //   }
 // }
 
-// 
-
 const userButton = document.querySelector('.user-icon');
 const loginPopup = document.getElementById('login-popup');
 const closeButton = document.querySelector('.close-button');
