@@ -82,6 +82,12 @@ async function sendMessage() {
     const currentPath = window.location.pathname; // 현재 경로: /chatroom=618188db-4240-4bb9-9830-a83272731d48
     const chatroom_id = currentPath.split("=")[1]; // '=' 이후 값 추출
     console.log("chatroom is ", chatroom_id);
+    // URL에서 chatroom_id 추출
+    // const urlParams = new URLSearchParams(window.location.search);
+    // const chatroom_id = urlParams.get("chatroom"); // URL에 있는 chatroom_id 읽기
+    // console.log("chatroom_id:", chatroom_id);
+
+    console.log("Sending request to /chat/new");
 
     const response = await fetch("http://localhost:8008/chat/new", {
       method: "POST",
